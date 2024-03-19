@@ -3,7 +3,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!**/src/main/java/com/cyberpsych/BotConfig.java
+!**/src/main/java/org/cyberpsych/BotConfig.java
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
