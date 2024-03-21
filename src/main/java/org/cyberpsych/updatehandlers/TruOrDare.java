@@ -5,6 +5,8 @@ import org.cyberpsych.services.ToD;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -28,35 +30,38 @@ public class TruOrDare extends TelegramLongPollingBot {
 
                 String input = message.getText();
 
-                if(input.equals(Commands.truthCommand)){
-                    msg.setText("Choose from below");
-                    //Options
-                    InlineKeyboardMarkup optMarkUp = new InlineKeyboardMarkup();
-                    List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-                    // Creating a list for buttons
-                    List<InlineKeyboardButton> Buttons = new ArrayList<InlineKeyboardButton>();
+                if(input.equals(Commands.startCommand)){
+                        msg.setText("Choose from below");
+                        //Options
+                        InlineKeyboardMarkup optMarkUp = new InlineKeyboardMarkup();
+                        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+                        // Creating a list for buttons
+                        List<InlineKeyboardButton> Buttons = new ArrayList<InlineKeyboardButton>();
 
-                    InlineKeyboardButton truth = new InlineKeyboardButton("Truth");
-                    truth.setCallbackData("presstruth");
-                    InlineKeyboardButton dare = new InlineKeyboardButton("Dare");
-                    dare.setCallbackData("pressdare");
-                    InlineKeyboardButton random = new InlineKeyboardButton("Random");
-                    random.setCallbackData("pressrandom");
+                        InlineKeyboardButton truth = new InlineKeyboardButton("Truth");
+                        truth.setCallbackData("presstruth");
+                        InlineKeyboardButton dare = new InlineKeyboardButton("Dare");
+                        dare.setCallbackData("pressdare");
+                        InlineKeyboardButton random = new InlineKeyboardButton("Random");
+                        random.setCallbackData("pressrandom");
 
-                    Buttons.add(truth);
-                    Buttons.add(dare);
-                    Buttons.add(random);
+                        Buttons.add(truth);
+                        Buttons.add(dare);
+                        Buttons.add(random);
 
-                    keyboard.add(Buttons);
-                    optMarkUp.setKeyboard(keyboard);
-                    msg.setReplyMarkup(optMarkUp);
+                        keyboard.add(Buttons);
+                        optMarkUp.setKeyboard(keyboard);
+                        msg.setReplyMarkup(optMarkUp);
 
-                    try {
-                        // Send the message
-                        execute(msg);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                        sendMessage(msg);
+                }
+                else if(input.equals(Commands.pingCommand)){
+                    msg.setText("The Bot is online. Continue playing...");
+                    sendMessage(msg);
+                }
+                else if (input.equals(Commands.exitBot)) {
+                    msg.setText("Thanks for playing, come back soon!");
+                    sendMessage(msg);
                 }
             }
         } else if(update.hasCallbackQuery()){
@@ -67,18 +72,25 @@ public class TruOrDare extends TelegramLongPollingBot {
             ToD td = new ToD();
             String data = callbackquery.getData();
 
-            System.out.println("Callback data: " + data); // Log the callback data
-
             if(data.equals("presstruth")){
                 String randTru = td.getRandomTruth();
                 res.setText(randTru);
-                try {
-                    execute(res);
-                    System.out.println("Callback Initiated Successfully!");
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                    System.out.println("Failed to send message"); // Log failure
-                }
+                sendMessage(res);
+            }
+            if(data.equals("pressdare")){
+                String randDare = td.getRandomDare();
+                res.setText(randDare);
+                sendMessage(res);
+            }
+            if(data.equals("pressrandom")){
+                String randSending = "";
+                Random r = new Random();
+                if(r.nextInt(2)==0)
+                    randSending = td.getRandomDare();
+                else
+                    randSending = td.getRandomTruth();
+                res.setText(randSending);
+                sendMessage(res);
             }
         }
     }
@@ -91,13 +103,11 @@ public class TruOrDare extends TelegramLongPollingBot {
     public String getBotUsername() {
         return BotConfig.TOD_USER;
     }
-    public void checkOnline(String chatId){
-        SendMessage msg = new SendMessage();
-        msg.setChatId(chatId);
-        msg.setText("The Bot is online. Continue playing...");
+    void sendMessage(SendMessage msg){
         try {
+            // Send the message
             execute(msg);
-        }catch (TelegramApiException e){
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
