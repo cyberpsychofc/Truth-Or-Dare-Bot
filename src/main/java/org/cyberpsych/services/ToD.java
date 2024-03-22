@@ -45,13 +45,13 @@ public class ToD {
         MongoDatabase database = mongoClient.getDatabase(BotConfig.DB_NAME);
         MongoCollection<Document> collection = database.getCollection(BotConfig.COLLECTION_NAME);
         FindIterable<Document> documents = collection.find();
-        String truth = "";
+        String dare = "";
         FindIterable<Document> docs = collection.find();
         for (Document doc:docs) {
             List<String> truth_list = (List<String>) doc.get("dare");
             int randomIndex = new Random().nextInt(truth_list.size());
-            truth = truth_list.get(randomIndex);
+            dare = truth_list.get(randomIndex);
         }
-        return truth;
+        return dare;
     }
 }

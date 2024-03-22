@@ -3,7 +3,7 @@ package org.cyberpsych;
 public class Commands {
     public static final String commandInitChar = "/";
     public static final String playCommand = commandInitChar + "play";
-    public static final String helpCommand = commandInitChar + "help";
+    //public static final String helpCommand = commandInitChar + "help";
     public static final String startCommand = commandInitChar + "start";
     public static final String truthCommand = commandInitChar + "truth";
     public static final String dareCommand = commandInitChar + "dare";
