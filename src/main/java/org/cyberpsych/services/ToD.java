@@ -8,8 +8,21 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
 public class ToD {
     Random r = new Random();
+    public void getRandom(SendMessage str){
+        String randomString = "";
+        if(r.nextInt(2)==0) {
+            randomString = getRandomDare();
+            str.setText("Dare - " + randomString);
+        }
+        else {
+            randomString = getRandomTruth();
+            str.setText("Truth - " + randomString);
+        }
+    }
 
     public String getRandomTruth(){
         MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27017/");

@@ -5,7 +5,6 @@ import org.cyberpsych.services.ToD;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -30,7 +29,7 @@ public class TruOrDare extends TelegramLongPollingBot {
 
                 String input = message.getText();
 
-                if(input.equals(Commands.startCommand)){
+                if(input.equals(Commands.playCommand)){
                         msg.setText("Choose from below");
                         //Options
                         InlineKeyboardMarkup optMarkUp = new InlineKeyboardMarkup();
@@ -43,7 +42,7 @@ public class TruOrDare extends TelegramLongPollingBot {
                         InlineKeyboardButton dare = new InlineKeyboardButton("Dare");
                         dare.setCallbackData("pressdare");
                         InlineKeyboardButton random = new InlineKeyboardButton("Random");
-                        random.setCallbackData("pressrandom");
+                        random.setCallbackData("presstod");
 
                         Buttons.add(truth);
                         Buttons.add(dare);
@@ -54,6 +53,23 @@ public class TruOrDare extends TelegramLongPollingBot {
                         msg.setReplyMarkup(optMarkUp);
 
                         sendMessage(msg);
+                }
+                else if(input.equals(Commands.truthCommand)){
+                    ToD td = new ToD();
+                    String randTru = td.getRandomTruth();
+                    msg.setText(randTru);
+                    sendMessage(msg);
+                }
+                else if(input.equals(Commands.dareCommand)){
+                    ToD td = new ToD();
+                    String randDare = td.getRandomDare();
+                    msg.setText(randDare);
+                    sendMessage(msg);
+                }
+                else if(input.equals(Commands.todCommand)){
+                    ToD td = new ToD();
+                    td.getRandom(msg);
+                    sendMessage(msg);
                 }
                 else if(input.equals(Commands.pingCommand)){
                     msg.setText("The Bot is online. Continue playing...");
@@ -82,14 +98,8 @@ public class TruOrDare extends TelegramLongPollingBot {
                 res.setText(randDare);
                 sendMessage(res);
             }
-            if(data.equals("pressrandom")){
-                String randSending = "";
-                Random r = new Random();
-                if(r.nextInt(2)==0)
-                    randSending = td.getRandomDare();
-                else
-                    randSending = td.getRandomTruth();
-                res.setText(randSending);
+            if(data.equals("presstod")){
+                td.getRandom(res);
                 sendMessage(res);
             }
         }
